@@ -1,0 +1,85 @@
+README for Opera (Optimal Paired-End Read Assembler)
+
+Author: Song Gao
+Date: 7th Mar 2012
+
+Changes from the previous version
+1. Opera can deal with multiple libraries in hierarchical way.
+2. The format of library's information in configuration file has been modified 
+
+Installation
+----------------------------------------------------------------------------------------------------
+
+Type "make install" in the opera root directory.
+
+Typical Usage
+----------------------------------------------------------------------------------------------------
+
+Input: 
+1) Assembled contigs/scaffolds in multi-fasta format (e.g. test_dataset/contigs.fa). 
+   Note that for Velvet and SOAPdenovo output, Opera automatically recognizes repeat 
+   contigs and filters them out. For other assembler's output formats, the expected 
+   input is a set of non-repeat contigs.
+2) Paired-end reads to be used for scaffolding (e.g. test_dataset/lib_1_1, 
+   test_dataset/lib_1_2).
+
+* Extra spaces or tabs in contig names might cause different mapping format. Please remove all those
+spaces or tabs if there is error in handling mapping file. 
+
+Running Opera:
+1) Reads should be mapped onto contigs (using bowtie):
+
+   perl bin/preprocess_reads.pl test_dataset/contigs.fa test_dataset/lib_1_1 
+   						test_dataset/lib_1_2 test_dataset/lib_1.map
+
+   Note that the binaries "bowtie" and "bowtie-build" are assumed to be in the path (if 
+   not the first line of preprocess_reads.pl should edited appropriately).
+
+2) There are two ways to set the parameters required by Opera:
+
+   (A) Using the command line
+       For single library
+       	   bin/opera test_dataset/contigs.fa test_dataset/lib_1.map test_dataset/results
+       For multiple libraries
+       	   bin/opera test_dataset/contigs.fa test_dataset/lib_1.map,test_dataset/lib_2.map test_dataset/results
+   (B) Using the provided configuration file   
+       For single library
+       	   bin/opera test_dataset/singleLib.config
+       For multiple libraries
+       	   bin/opera test_dataset/multiLib.config
+
+   where .config file is set to point to the right contigs and mapping files and output directory.
+
+Output Format
+----------------------------------------------------------------------------------------------------
+
+Scaffolds output by Opera are stored in a multi-fasta file "scaffoldSeq.fasta". Some useful summary
+statistics are saved to the file "statistics". Details on other output files can be found in the 
+Opera manual (coming soon)
+
+Format of Config File
+----------------------------------------------------------------------------------------------------
+
+An example config file can be found in "test_dataset/single.config". The main parameters
+that need to be specified are:
+
+   a) contig_file: a multi-fasta file containing assembled contigs/scaffolds (input to Opera).
+   b) map_file: the mapping file specifying the location of paired-end reads on the contigs/scaffolds 
+   				(input to Opera; see preprocess_reads.pl). 
+   c) output_folder: the directory into which all results are written.
+
+References
+----------------------------------------------------------------------------------------------------
+
+1) To cite Opera please use the following citation:
+
+Song Gao, Wing-Kin Sung, Niranjan Nagarajan. Opera: reconstructing optimal genomic scaffolds with 
+high-throughput paired-end sequences. 
+Journal of Computational Biology, Sept. 2011, doi:10.1089/cmb.2011.0170.
+
+2) SourceForge Page: https://sourceforge.net/projects/operasf/
+   Mailing List 
+   (for Updates and Bug Fixes): http://lists.sourceforge.net/mailman/listinfo/operasf-updates 
+
+3) Contact: gaosong@nus.edu.sg (Song GAO) 
+
